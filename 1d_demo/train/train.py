@@ -32,8 +32,9 @@ def test(model, testloader, device, criterion, optimizer, test_acc_list):
     test_acc = round(100 * test_correct / test_total, 3)
     test_acc_list.append(test_acc)
     print(f'Test accuracy:{(test_acc)}%')
+    return test_acc
 
-def train(model, epoch, dataloader, testloader, device, criterion, optimizer, train_acc_list,     test_acc_list, show_result_epoch):
+def train(model, epoch, dataloader, testloader, device, criterion, optimizer, train_acc_list, test_acc_list, show_result_epoch, best_avg_score):
     model.train()
     train_correct = 0
     train_total = 0
@@ -54,7 +55,13 @@ def train(model, epoch, dataloader, testloader, device, criterion, optimizer, tr
         print('=' * 10, epoch // 10, '=' * 10)
         print('loss:', loss.item())
         print(f'Train accuracy:{train_acc}%')
-        test(model, testloader, device, criterion, optimizer, test_acc_list)
+
+        test_acc = test(model, testloader, device, criterion, optimizer, test_acc_list)
+        if test_acc > best_avg_score:
+            best_avg_score = test_acc
+            print('saving new weights...\n')
+            torch.save(model.state_dict(), f'epoch_{epoch + 1}_valid_avg_{test_acc:0.4f}_model_weights.pth')
+    return best_avg_score
 
 def main():
     data_path = "./dataset/"
@@ -86,8 +93,9 @@ def main():
     train_acc_list = []
     test_acc_list = []
 
+    best_avg_score = 0
     for epoch in range(epoch_num):
-        train(model, epoch, dataloader, testloader, device, criterion, optimizer, train_acc_list, test_acc_list, show_result_epoch)
+        best_avg_score = train(model, epoch, dataloader, testloader, device, criterion, optimizer, train_acc_list, test_acc_list, show_result_epoch, best_avg_score)
 
     plt.plot(np.array(range(epoch_num//show_result_epoch)) * show_result_epoch, train_acc_list)
     plt.plot(np.array(range(epoch_num//show_result_epoch)) * show_result_epoch, test_acc_list)
