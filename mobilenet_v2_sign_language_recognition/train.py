@@ -22,7 +22,10 @@ def train(epochs):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model.to(device)
     if os.path.exists("mobilenet_latest.pth"):
-        model.load_state_dict(torch.load("mobilenet_latest.pth"))
+        if torch.cuda.is_available():
+            model.load_state_dict(torch.load("mobilenet_latest.pth"))
+        else:
+            model.load_state_dict(torch.load("mobilenet_latest.pth", map_location=torch.device('cpu')))
         print("加载已有模型继续训练")
  
     best_val_accuracy = 0.0
