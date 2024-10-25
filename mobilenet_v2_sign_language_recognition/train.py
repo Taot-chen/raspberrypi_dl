@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torchvision
 import utils
+import time
  
  
 def load_model(class_num=27):
@@ -29,7 +30,8 @@ def train(epochs):
     val_accuracies = []
     patience = 5
     patience_counter = 0
- 
+
+    start = time.time()
     for epoch in range(epochs):
         print("Epoch {}/{}".format(epoch + 1, epochs))
         running_loss = 0.0
@@ -74,6 +76,8 @@ def train(epochs):
             if patience_counter >= patience:
                 print("早停触发，停止训练")
                 break
- 
+    end = time.time()
+    print("train total time: {}s".format(end - start))
+
 if __name__ == '__main__':
     train(epochs=50)

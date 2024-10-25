@@ -4,6 +4,7 @@ import torch
 import torch.nn.functional as F
 from torchvision.transforms import Resize, Compose, ToTensor, Normalize
 from PIL import Image
+import time
  
 class SignLanguageRecognition:
     def __init__(self, module_file='./mobilenet_latest.pth', labels_file='./labels.json'):
@@ -52,7 +53,14 @@ class SignLanguageRecognition:
 
 if __name__ == "__main__": 
     recongize=SignLanguageRecognition()
+    start = time.time()
     ret = recongize.predict('./synthetic-asl-alphabet_dataset/Test_Alphabet/A/e4761e88-10df-41d2-b980-463375c5c46c.rgb_0000.png')
     print(ret)
+    end = time.time()
+    print("infer total time: {}s".format(end - start))
+
+    start = time.time()
     ret = recongize.predict('./synthetic-asl-alphabet_dataset/Test_Alphabet/Blank/5da53b24-d860-4921-a645-9fe85bd91213.rgb_0000.png')
     print(ret)
+    end = time.time()
+    print("infer total time: {}s".format(end - start))
