@@ -4,6 +4,8 @@ import torch.nn as nn
 import torchvision
 import utils
 import time
+import matplotlib.pyplot as plt
+import numpy as np
  
  
 def load_model(class_num=27):
@@ -30,10 +32,12 @@ def train(epochs):
     val_accuracies = []
     patience = 5
     patience_counter = 0
+    epoch_list = []
 
     start = time.time()
     for epoch in range(epochs):
         print("Epoch {}/{}".format(epoch + 1, epochs))
+        epoch_list.append(epoch + 1)
         running_loss = 0.0
         correct = 0
         total = 0
@@ -78,6 +82,13 @@ def train(epochs):
                 break
     end = time.time()
     print("train total time: {}s".format(end - start))
+    plt.plot(epoch_list, train_accuracies)
+    plt.plot(epoch_list, val_accuracies)
+    plt.legend(['train', 'test'])
+    plt.title('Result')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.savefig(f"./mobilenet_latest.png")
 
 if __name__ == '__main__':
     train(epochs=50)
