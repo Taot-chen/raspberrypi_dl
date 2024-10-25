@@ -17,6 +17,7 @@ from Models.shuffuleNetV2 import shuffuleNetV2
 from Models.SqueezeNet import SqueezeNet
 from Models.VGG import VGG19
 import argparse
+import time
 
 class Dataset(Dataset):
     def __init__(self, data):
@@ -111,7 +112,7 @@ def main():
     data = np.load(f'{data_path}/data.npy')
     label = np.load(f'{data_path}/label.npy')
     data_part = 0.7
-    epoch_num = 100
+    epoch_num = 1000
     show_result_epoch = 10 
     bsz = 50
     dataset, data_chal, data_len, classes = package_dataset(data, label)
@@ -136,8 +137,11 @@ def main():
         train_acc_list = []
         test_acc_list = []
         best_avg_score = 0
+        start = time.time()
         for epoch in range(epoch_num):
             best_avg_score = train(model, epoch, dataloader, testloader, device, criterion, optimizer, train_acc_list, test_acc_list, show_result_epoch, best_avg_score, model_name)
+        end = time.time()
+        print("train total time: {}s".format(end - start))
         plt.plot(np.array(range(epoch_num//show_result_epoch)) * show_result_epoch, train_acc_list)
         plt.plot(np.array(range(epoch_num//show_result_epoch)) * show_result_epoch, test_acc_list)
         plt.legend(['train', 'test'])
