@@ -174,6 +174,7 @@ fp16 的检测结果和 fp32 的检测结果一致，但是概率上有细微差
 ### 3 添加推理时间计算
 
 ```bash
+cd raspberrypi_dl/deploy_yolov5_with_ncnn
 cp yolov5.cpp /path/to/ncnn/examples/yolov5.cpp
 ```
 
