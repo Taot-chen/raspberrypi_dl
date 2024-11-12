@@ -170,3 +170,11 @@ fp16 检测结果：
 ![alt text](./images/1730831734861.png)
 
 fp16 的检测结果和 fp32 的检测结果一致，但是概率上有细微差别，速度更快一些。
+
+### 3 添加推理时间计算
+
+```bash
+cp yolov5.cpp /path/to/ncnn/examples/yolov5.cpp
+```
+
+之后再重新编译 ncnn 即可。
